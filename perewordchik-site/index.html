@@ -249,7 +249,7 @@ function rateCard(q){const c=sess.cur,w=c.w;if(q==="again"){grade(w.id,false,fal
 function markKnown(v){const c=sess.cur;if(v){setKnown(c.w.id,true);sess.ok++}advance()}
 function skipKnown(){const c=sess.cur,id=c.w.id;setKnown(id,true);sess.q=sess.q.filter((x,i)=>i<=sess.i||x.id!==id);advance()}
 function advance(){sess.i++;nextQ();drawStudy()}
-const SKEY="wc-sync";let syncCfg=null,syncT=null,lastPushed="",syncBusy=false,syncMsg="";
+const SKEY="wc-sync",DEF_SYNC="https://perewordchikk.inpsyght.workers.dev";let syncCfg=null,syncT=null,lastPushed="",syncBusy=false,syncMsg="";
 try{syncCfg=JSON.parse(localStorage.getItem(SKEY)||"null")}catch(e){}
 const isViewer=()=>!!(window.claude&&window.claude.use);
 async function hashCode(c){const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("wordcurve:"+c.trim()));return[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,"0")).join("")}
@@ -289,7 +289,7 @@ function syncCard(){
  const c=syncCfg||{};let acc;
  if(c.token)acc=`<h3>Аккаунт</h3><p style="margin:0">Вы вошли как <b>${esc(c.user||"")}</b>. Прогресс сохраняется автоматически и доступен на любом устройстве после входа.</p><div class="row"><button class="btn" data-act="syncnow">Синхронизировать сейчас</button><button class="btn" data-act="logout">Выйти</button></div><span id="syncmsg" class="small muted">${esc(syncMsg)}</span>`;
  else acc=`<h3>Вход в аккаунт</h3><p class="muted small" style="margin:0">Войдите, чтобы прогресс сохранялся и был доступен на всех устройствах. Нужен адрес вашего Worker (его выдаёт Cloudflare после публикации <code>worker.js</code>).</p>
- <div class="field"><label for="acc-url">Адрес Worker</label><input id="acc-url" placeholder="https://perewordchik-sync.имя.workers.dev" value="${esc(c.url||"")}"></div>
+ <div class="field"><label for="acc-url">Адрес Worker</label><input id="acc-url" value="${esc(c.url||DEF_SYNC)}"></div>
  <div class="field"><label for="acc-user">Логин</label><input id="acc-user" autocomplete="username" autocapitalize="off" value="${esc(c.user||"")}"></div>
  <div class="field"><label for="acc-pass">Пароль (от 8 символов)</label><input id="acc-pass" type="password" autocomplete="current-password"></div>
  <div class="row"><button class="btn primary" data-act="login">Войти</button><button class="btn" data-act="register">Создать аккаунт</button></div><span id="syncmsg" class="small muted">${esc(syncMsg)}</span>`;
